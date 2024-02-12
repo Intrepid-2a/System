@@ -5,9 +5,12 @@ from psychopy import core, visual, event, gui, monitors
 from psychopy.hardware import keyboard
 from pyglet.window import key
 
+import sys, os
+sys.path.append(os.path.join('..', 'EyeTracking'))
+from EyeTracking import EyeTracker
 
 
-def createPsychopyWindow(location=None, glasses='RG'):
+def localizeSetup(location=None, glasses='RG', trackEyes, filefolder):
 
     # sanity check on location argument
     if location == None:
@@ -20,13 +23,28 @@ def createPsychopyWindow(location=None, glasses='RG'):
     else:
         raise Warning("set location to a string: Glasgow or Toronto")
 
+
+if glasses == 'RG':
+    back_col   = [ 0.5, 0.5,  -1.0]
+    red_col    = [0.5, -1.0,  -1.0]
+    blue_col   = [ -1.0, 0.5, -1.0]
+elif glasses == 'RB':
+    back_col   = [ 0.5, -1.0,  0.5]
+    red_col    = [ 0.5, -1.0, -1.0] #Flipped back 
+    blue_col   = [-1.0, -1.0,  0.5] 
+
+
     # sanity check on glasses argument, and picking back-ground color
     if isinstance(glasses, str):
         if glasses in ['RG', 'RB']:
             if glasses == 'RG':
-                back_col = [0.5, 0.5, -1.0]
+                back_col   = [ 0.5,  0.5, -1.0]
+                red_col    = [ 0.5, -1.0, -1.0]
+                blue_col   = [-1.0,  0.5, -1.0]
             if glasses == 'RB':
-                back_col = [0.5, -1.0, 0.5]
+                back_col   = [ 0.5, -1.0,  0.5]
+                red_col    = [ 0.5, -1.0, -1.0]
+                blue_col   = [-1.0, -1.0,  0.5] 
         else:
             raise Warning('glasses should be RG (default) or RB')
     else:
@@ -45,6 +63,8 @@ def createPsychopyWindow(location=None, glasses='RG'):
         distance   = None # in cm
         screen     = None # index on the system: 0 = first monitor, 1 = second monitor, and so on
 
+        tracker = 'eyelink'
+
 
     if location == 'toronto':
         # color calibrated monitor:
@@ -58,6 +78,8 @@ def createPsychopyWindow(location=None, glasses='RG'):
         distance   = 50 # in cm
         screen     = 1  # index on the system: 0 = first monitor, 1 = second monitor, and so on
 
+        tracker = 'livetrack'
+
     mymonitor = monitors.Monitor(name='temp',
                                  distance=distance,
                                  width=size[0])
@@ -70,4 +92,34 @@ def createPsychopyWindow(location=None, glasses='RG'):
             # distance = 40
     win.mouseVisible = False
 
-    return(win)
+
+    tracker=None, 
+                 trackEyes=[False, False], 
+                 fixationWindow=None,
+                 minFixDur=None,
+                 fixTimeout=None,
+                 psychopyWindow=None, 
+                 filefolder=None, 
+                 samplemode=None,
+                 calibrationpoints=9
+
+    if not any(trackEyes):
+        tracker = 'mouse'
+
+
+    ET = EyeTracker(tracker           = tracker,
+                    fixationWindow    = 2.0,
+                    minFixDur         = 0.2,
+                    fixTimeout        = 3.0,
+                    psychopyWindow    = win,
+                    filefolder        = filefolder,
+                    samplemode        = 'average',
+                    calibrationpoints = 5 )
+
+    colors = {'back_col' : back_col,
+              'red_col'  : red_col,
+              'blue_col' : blue_col }
+
+    return({'win'     : win,
+            'tracker' : ET,
+            'colors'  : colors})
