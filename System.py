@@ -7,7 +7,7 @@ from pyglet.window import key
 
 
 
-def createMonitor(location=None, glasses='RG'):
+def createPsychopyWindow(location=None, glasses='RG'):
 
     # sanity check on location argument
     if location == None:
