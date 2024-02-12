@@ -15,7 +15,7 @@ def createPsychopyWindow(location=None, glasses='RG'):
     if isinstance(location, str):
         if location in ['Toronto', 'toronto', 'tor', 'TOR', 't', 'T', 'YYZ']:
             location = 'toronto'
-        if location in ['Glasgow', 'glasgow', 'gla', 'GLA', 'g', 'G'. 'EGPF']:
+        if location in ['Glasgow', 'glasgow', 'gla', 'GLA', 'g', 'G', 'EGPF']:
             location = 'glasgow'
     else:
         raise Warning("set location to a string: Glasgow or Toronto")
