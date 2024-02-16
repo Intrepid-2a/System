@@ -10,7 +10,7 @@ sys.path.append(os.path.join('..', 'EyeTracking'))
 from EyeTracking import EyeTracker
 
 
-def localizeSetup(location=None, glasses='RG', trackEyes, filefolder):
+def localizeSetup( trackEyes, filefolder, location=None, glasses='RG' ):
 
     # sanity check on location argument
     if location == None:
@@ -22,16 +22,6 @@ def localizeSetup(location=None, glasses='RG', trackEyes, filefolder):
             location = 'glasgow'
     else:
         raise Warning("set location to a string: Glasgow or Toronto")
-
-
-if glasses == 'RG':
-    back_col   = [ 0.5, 0.5,  -1.0]
-    red_col    = [0.5, -1.0,  -1.0]
-    blue_col   = [ -1.0, 0.5, -1.0]
-elif glasses == 'RB':
-    back_col   = [ 0.5, -1.0,  0.5]
-    red_col    = [ 0.5, -1.0, -1.0] #Flipped back 
-    blue_col   = [-1.0, -1.0,  0.5] 
 
 
     # sanity check on glasses argument, and picking back-ground color
@@ -58,10 +48,10 @@ elif glasses == 'RB':
                                 [  0., 1.0, 1.0, np.nan, np.nan, np.nan  ],
                                 [  0., 1.0, 1.0, np.nan, np.nan, np.nan  ]], dtype=float)
 
-        resolution = [1500, 800] # in pixels
-        size       = [None, None] # in cm
-        distance   = None # in cm
-        screen     = None # index on the system: 0 = first monitor, 1 = second monitor, and so on
+        resolution = [1920, 1080] # in pixels
+        size       = [60, 33.75] # in cm
+        distance   = 57 # in cm
+        screen     = 0 # index on the system: 0 = first monitor, 1 = second monitor, and so on
 
         tracker = 'eyelink'
 
@@ -76,7 +66,7 @@ elif glasses == 'RB':
         resolution = [1920, 1080] # in pixels
         size       = [59.8, 33.6] # in cm
         distance   = 50 # in cm
-        screen     = 1  # index on the system: 0 = first monitor, 1 = second monitor, and so on
+        screen     = 0  # index on the system: 0 = first monitor, 1 = second monitor, and so on
 
         tracker = 'livetrack'
 
@@ -88,26 +78,15 @@ elif glasses == 'RB':
 
     #win = visual.Window([1000, 500], allowGUI=True, monitor='ccni', units='deg', fullscr=True, color = back_col, colorSpace = 'rgb')
     win = visual.Window(resolution, monitor=mymonitor, allowGUI=True, units='deg', fullscr=True, color=back_col, colorSpace = 'rgb', screen=screen)
-            # size = [34.5, 19.5]
-            # distance = 40
-    win.mouseVisible = False
-
-
-    tracker=None, 
-                 trackEyes=[False, False], 
-                 fixationWindow=None,
-                 minFixDur=None,
-                 fixTimeout=None,
-                 psychopyWindow=None, 
-                 filefolder=None, 
-                 samplemode=None,
-                 calibrationpoints=9
+            # size = [34.5, 19.5]filefolder,
 
     if not any(trackEyes):
         tracker = 'mouse'
+        trackEyes = [True, False]
 
 
     ET = EyeTracker(tracker           = tracker,
+                    trackEyes         = trackEyes,
                     fixationWindow    = 2.0,
                     minFixDur         = 0.2,
                     fixTimeout        = 3.0,
