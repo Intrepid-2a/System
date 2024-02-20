@@ -100,9 +100,9 @@ def localizeSetup( trackEyes, filefolder, location=None, glasses='RG' ):
               'blue_col' : blue_col }
 
     fusion = {'hi': fusionStim(win = win,
-                               pos = [0,5]),
+                               pos = [0,7]),
               'lo': fusionStim(win = win,
-                               pos = [0,5])}
+                               pos = [0,-7])}
 
     return({'win'     : win,
             'tracker' : ET,
@@ -123,7 +123,7 @@ class fusionStim:
                  pos     = [0,0],
                  colors  = [[-1,-1,-1],[1,1,1]],
                  rows    = 15,
-                 columns = 7,
+                 columns = 3,
                  square  = 0.5,
                  units   = 'deg'):
 
